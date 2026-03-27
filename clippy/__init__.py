@@ -1,6 +1,6 @@
 """Main package file for ClipPy."""
 
-from .src.core.audio_extractor import get_audio_from_video, extract_audio, get_default_output_path
+from .src.core.audio_extractor import get_audio_from_video, extract_audio, get_default_output_path, chunk_video_adaptive
 from .src.core.video_tools import merge_videos, composite_image_over_video, convert_video_resolutions, get_video_thumbnail, crop_video
 from .src.utils.validation import validate_video_file, validate_ffmpeg
 
@@ -16,5 +16,6 @@ __all__ = [
     "composite_image_over_video",
     "convert_video_resolutions",
     "get_video_thumbnail",
-    "crop_video"
+    "crop_video",
+    "chunk_video_adaptive"
 ]
