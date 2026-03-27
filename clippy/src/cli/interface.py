@@ -5,13 +5,14 @@ from pathlib import Path
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
+        prog="clippy",
         description="ClipPy - Extract audio from video files",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python %(prog)s -i video.mp4                    # Extract to video.mp3
-  python %(prog)s -i video.mp4 -o audio.wav      # Extract to audio.wav
-  python %(prog)s -i video.mkv -f mp3            # Extract to video.mp3
+  clippy -i video.mp4                    # Extract to video.mp3
+  clippy -i video.mp4 -o audio.wav      # Extract to audio.wav
+  clippy -i video.mkv -f mp3            # Extract to video.mp3
         """
     )
 
@@ -26,22 +27,16 @@ Examples:
 def show_usage_instructions():
     print("ClipPy - Audio Extraction Tool")
     print("==============================")
-    print("This script extracts audio from video files using ClipPy.")
+    print("This tool extracts audio from video files using FFmpeg.")
     print()
-    print("Usage: python main.py -i <input_video> [-o <output_audio>] [-f <format>]")
+    print("Usage: clippy -i <input_video> [-o <output_audio>] [-f <format>]")
     print()
     print("Options:")
     print("  -i, --input   Input video file path (required)")
     print("  -o, --output  Output audio file path (optional)")
     print("  -f, --format  Output format: mp3 or wav (default: mp3)")
     print()
-    print("Example: python main.py -i video.mp4 -o audio.mp3")
-
-
-def install_dependencies():
-    print()
-    print("To install required dependencies, run:")
-    print("pip install ffmpeg-python")
+    print("Example: clippy -i video.mp4 -o audio.mp3")
 
 
 def validate_and_get_output_path(input_path, output_path=None, audio_format='mp3'):
@@ -58,3 +53,21 @@ def validate_and_get_output_path(input_path, output_path=None, audio_format='mp3
         sys.exit(1)
 
     return output_path
+
+
+def main():
+    from ..core.audio_extractor import get_audio_from_video
+    args = parse_arguments()
+    
+    success = get_audio_from_video(
+        args.input, 
+        args.output, 
+        args.format
+    )
+    
+    if success:
+        print(f"Successfully extracted audio to: {args.output if args.output else 'default path'}")
+        sys.exit(0)
+    else:
+        print("Error: Audio extraction failed.")
+        sys.exit(1)

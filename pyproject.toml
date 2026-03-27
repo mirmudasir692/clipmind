@@ -13,7 +13,8 @@ authors = [
     { name = "Mudasir", email = "your_email@example.com" }
 ]
 dependencies = [
-    "ffmpeg-python"
+    "ffmpeg-python",
+    "pymongo"
 ]
 
 keywords = ["video", "audio", "ffmpeg", "converter", "media"]

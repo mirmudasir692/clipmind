@@ -1,54 +1,23 @@
 # ClipPy - Video to Audio Converter
 
-A simple and efficient Python tool called ClipPy to extract audio from video files using FFmpeg.
+A simple and efficient Python tool to extract audio from video files using FFmpeg.
 
 ## Features
 
-- 🎵 Extract high-quality audio from various video formats
-- 🔧 Supports multiple output formats (MP3, WAV)
-- 📁 Automatic filename generation based on input video
-- ✅ Comprehensive file validation and error handling
-- 🖥️ Both CLI interface and Python library usage
-- 🛠️ Modular architecture for easy maintenance
-
-## Supported Video Formats
-
-- MP4 (.mp4)
-- MKV (.mkv)
-- AVI (.avi)
-- MOV (.mov)
-- WMV (.wmv)
-- FLV (.flv)
-- WebM (.webm)
-- M4V (.m4v)
-- MPG/MPEG (.mpg, .mpeg)
-- 3GP (.3gp)
-- F4V (.f4v)
+- 🎵 Extract high-quality audio (MP3, WAV)
+- ✂️ Video tools: merge, crop, overlay, resolve conversion
+- ✅ File validation and error handling
+- 🖥️ CLI interface and Python library API
+- 🛠️ Minimal dependencies
 
 ## Installation
 
 ### Prerequisites
 
-1. **Python 3.6+** installed on your system
-2. **FFmpeg** installed on your system
+1. **Python 3.6+**
+2. **FFmpeg** (must be in system PATH)
 
-### Install FFmpeg
-
-**Ubuntu/Debian:**
-```bash
-sudo apt update
-sudo apt install ffmpeg
-```
-
-**macOS:**
-```bash
-brew install ffmpeg
-```
-
-**Windows:**
-Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to your PATH
-
-### Install Python Dependencies
+### Install Dependencies
 
 ```bash
 pip install ffmpeg-python
@@ -58,119 +27,48 @@ pip install ffmpeg-python
 
 ### Method 1: Command Line Interface
 
+Once installed, use the `clippy` command:
+
 ```bash
-python main.py -i <input_video> [-o <output_audio>] [-f <format>]
+clippy -i video.mp4 [-o audio.mp3] [-f mp3]
 ```
 
 #### Examples:
 
 ```bash
-# Extract audio to MP3 (default format)
-python main.py -i video.mp4
+# Basic extraction
+clippy -i video.mp4
 
-# Specify output filename
-python main.py -i video.mp4 -o audio.wav
-
-# Specify output format
-python main.py -i video.mkv -f mp3
-
-# Full specification
-python main.py -i input_video.avi -o output_audio.mp3 -f mp3
+# Custom output format
+clippy -i video.mkv -f wav
 ```
 
-#### Options:
-
-- `-i, --input` : Input video file path (required)
-- `-o, --output` : Output audio file path (optional)
-- `-f, --format` : Output format: `mp3` or `wav` (default: `mp3`)
-
-### Method 2: As a Python Library
+### Method 2: Python Library
 
 ```python
 from clippy import get_audio_from_video
 
-# Basic usage
-success = get_audio_from_video("video.mp4")
+# Extract audio
+success = get_audio_from_video("video.mp4", "audio.mp3")
 
-# With custom output path
-success = get_audio_from_video("video.mp4", "audio.wav")
-
-# Specify format
-success = get_audio_from_video("video.mp4", audio_format="wav")
+# Advanced video tools
+from clippy import merge_videos, crop_video
+merge_videos("part1.mp4", "part2.mp4", "merged.mp4")
 ```
 
 ## Project Structure
 
 ```
-video_to_audio/
-├── main.py                     # Entry point for CLI usage
-├── README.md                   # This file
-└── clippy/               # Main package
-    ├── __init__.py            # Package exports
-    └── src/                   # Source code
-        ├── __init__.py
-        ├── cli/               # Command line interface
-        │   └── interface.py   # Argument parsing and validation
-        ├── core/              # Core functionality
-        │   └── audio_extractor.py  # Audio extraction logic
-        └── utils/             # Utility functions
-            └── validation.py  # File and system validation
+clippy/
+├── clippy/               # Core package
+│   └── src/
+│       ├── cli/          # CLI implementation
+│       ├── core/         # Audio & Video tools
+│       └── utils/        # Validations
+├── pyproject.toml        # Build configuration
+└── README.md             # Documentation
 ```
-
-## How It Works
-
-1. **Validation Phase**: Checks if the input video exists and is a valid file
-2. **FFmpeg Check**: Ensures FFmpeg is installed and accessible
-3. **Output Path Resolution**: Generates output filename if not specified
-4. **Audio Extraction**: Uses FFmpeg to extract audio stream
-5. **Result Reporting**: Provides success/failure feedback
-
-## Error Handling
-
-The tool provides clear error messages for common issues:
-- Missing input file
-- Unsupported file format
-- Missing FFmpeg installation
-- Permission errors
-- Invalid output directory
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Troubleshooting
-
-### FFmpeg Not Found
-Make sure FFmpeg is installed and added to your system PATH:
-```bash
-ffmpeg -version  # Should display FFmpeg version info
-```
-
-### Permission Denied
-Ensure you have write permissions in the output directory:
-```bash
-chmod +w /path/to/output/directory
-```
-
-### Unsupported Format Warning
-While the tool warns about unsupported extensions, FFmpeg may still be able to process the file. The warning is precautionary.
-
-## Version History
-
-- **v1.0.0**: Initial release with basic audio extraction functionality
-
-## Author
-
-ClipPy Team
-
----
-
-**Note**: This tool requires FFmpeg to be installed on your system. Make sure to install it before using the converter.
+MIT
