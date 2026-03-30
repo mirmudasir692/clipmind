@@ -1,7 +1,9 @@
 import ffmpeg
 import tempfile
 import os
-from typing import Optional, Any
+import cv2
+import numpy as np
+from typing import Optional, Any, Union
 from pathlib import Path
 import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -594,3 +596,77 @@ def generate_subtitle(message_tool, video_path, prompt=None):
         return result
     except json.JSONDecodeError:
         return response_text
+
+def video_phash(video_path, hash_size=16, num_frames=5):
+    """Fast perceptual hash using ffmpeg pipe (no temp files)."""
+
+    video_path = str(video_path)
+
+    # Get duration
+    try:
+        duration = float(subprocess.check_output([
+            "ffprobe", "-v", "error",
+            "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1",
+            video_path
+        ]).decode().strip())
+    except Exception:
+        return np.zeros(hash_size * hash_size * num_frames, dtype=np.uint8)
+
+    if duration <= 0:
+        return np.zeros(hash_size * hash_size * num_frames, dtype=np.uint8)
+
+    # Smart timestamps (avoid edges)
+    start = max(duration * 0.1, 0)
+    end = max(duration * 0.9, start + 0.1)
+    timestamps = np.linspace(start, end, num_frames)
+
+    hashes = []
+
+    for t in timestamps:
+        cmd = [
+            "ffmpeg",
+            "-ss", str(t),
+            "-i", video_path,
+            "-frames:v", "1",
+            "-vf", f"scale={hash_size}:{hash_size+1},format=gray",
+            "-f", "image2pipe",
+            "-vcodec", "rawvideo",
+            "-"
+        ]
+
+        frame_size = hash_size * (hash_size + 1)
+        pipe = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL
+        )
+
+        stdout = pipe.stdout
+        if stdout is None:
+            pipe.kill()
+            continue
+
+        raw = stdout.read(frame_size)
+        pipe.wait()
+
+        if len(raw) != frame_size:
+            continue
+
+        img = np.frombuffer(raw, dtype=np.uint8).reshape((hash_size + 1, hash_size))
+
+        img = np.ascontiguousarray(img, dtype=np.float32)
+
+        dct = cv2.dct(img)
+
+        dct_low = dct[:hash_size, 1:hash_size + 1]
+
+        avg = dct_low.mean()
+        binary_hash = (dct_low > avg).astype(np.uint8).flatten()
+
+        hashes.append(binary_hash)
+
+    if not hashes:
+        return np.zeros(hash_size * hash_size * num_frames, dtype=np.uint8)
+
+    return np.concatenate(hashes)
