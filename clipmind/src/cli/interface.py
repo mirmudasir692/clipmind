@@ -5,14 +5,14 @@ from pathlib import Path
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        prog="clippy",
-        description="ClipPy - Extract audio from video files",
+        prog="clipmind",
+        description="clipmind - Extract audio from video files",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  clippy -i video.mp4                    # Extract to video.mp3
-  clippy -i video.mp4 -o audio.wav      # Extract to audio.wav
-  clippy -i video.mkv -f mp3            # Extract to video.mp3
+  clipmind -i video.mp4                    # Extract to video.mp3
+  clipmind -i video.mp4 -o audio.wav      # Extract to audio.wav
+  clipmind -i video.mkv -f mp3            # Extract to video.mp3
         """
     )
 
@@ -25,18 +25,18 @@ Examples:
 
 
 def show_usage_instructions():
-    print("ClipPy - Audio Extraction Tool")
+    print("clipmind - Audio Extraction Tool")
     print("==============================")
     print("This tool extracts audio from video files using FFmpeg.")
     print()
-    print("Usage: clippy -i <input_video> [-o <output_audio>] [-f <format>]")
+    print("Usage: clipmind -i <input_video> [-o <output_audio>] [-f <format>]")
     print()
     print("Options:")
     print("  -i, --input   Input video file path (required)")
     print("  -o, --output  Output audio file path (optional)")
     print("  -f, --format  Output format: mp3 or wav (default: mp3)")
     print()
-    print("Example: clippy -i video.mp4 -o audio.mp3")
+    print("Example: clipmind -i video.mp4 -o audio.mp3")
 
 
 def validate_and_get_output_path(input_path, output_path=None, audio_format='mp3'):

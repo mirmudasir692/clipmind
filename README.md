@@ -1,4 +1,4 @@
-# ClipPy - Video to Audio Converter
+# clipmind - Video to Audio Converter
 
 A simple and efficient Python tool to extract audio from video files using FFmpeg.
 
@@ -27,40 +27,40 @@ pip install ffmpeg-python
 
 ### Method 1: Command Line Interface
 
-Once installed, use the `clippy` command:
+Once installed, use the `clipmind` command:
 
 ```bash
-clippy -i video.mp4 [-o audio.mp3] [-f mp3]
+clipmind -i video.mp4 [-o audio.mp3] [-f mp3]
 ```
 
 #### Examples:
 
 ```bash
 # Basic extraction
-clippy -i video.mp4
+clipmind -i video.mp4
 
 # Custom output format
-clippy -i video.mkv -f wav
+clipmind -i video.mkv -f wav
 ```
 
 ### Method 2: Python Library
 
 ```python
-from clippy import get_audio_from_video
+from clipmind import get_audio_from_video
 
 # Extract audio
 success = get_audio_from_video("video.mp4", "audio.mp3")
 
 # Advanced video tools
-from clippy import merge_videos, crop_video
+from clipmind import merge_videos, crop_video
 merge_videos("part1.mp4", "part2.mp4", "merged.mp4")
 ```
 
 ## Project Structure
 
 ```
-clippy/
-├── clippy/               # Core package
+clipmind/
+├── clipmind/               # Core package
 │   └── src/
 │       ├── cli/          # CLI implementation
 │       ├── core/         # Audio & Video tools
