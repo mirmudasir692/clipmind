@@ -1,7 +1,8 @@
 """Package init file for clipmind."""
 from .core.audio_extractor import get_audio_from_video
 from .utils.language import print_urdu
+from .utils.redis import configure_redis
 
 __version__ = "1.0.0"
 __author__ = "clipmind Team"
-__all__ = ["get_audio_from_video", "print_urdu"]
+__all__ = ["get_audio_from_video", "print_urdu", "configure_redis"]
